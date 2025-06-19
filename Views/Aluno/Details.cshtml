@@ -1,0 +1,14 @@
+﻿@model ExercicioMVC.Models.Aluno
+@{
+    ViewData["Title"] = "Detalhes do Aluno";
+}
+<h2>@ViewData["Title"]</h2>
+<dl class="row">
+    <dt class="col-sm-2">Nome</dt>
+    <dd class="col-sm-10">@Model.Nome</dd>
+    <dt class="col-sm-2">Idade</dt>
+    <dd class="col-sm-10">@Model.Idade</dd>
+    <dt class="col-sm-2">Turma</dt>
+    <dd class="col-sm-10">@Model.Turma</dd>
+</dl>
+<a asp-action="Index" class="btn btn-secondary">Voltar</a>

@@ -1,0 +1,35 @@
+﻿@model List<ExercicioMVC.Models.Aluno>
+
+@{
+    ViewData["Title"] = "Página Inicial";
+}
+
+<h2>Bem-vindo ao Sistema de Alunos</h2>
+
+@if (Model.Count == 0)
+{
+    <p>Nenhum aluno cadastrado ainda.</p>
+}
+else
+{
+    <h3>Lista de Alunos</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Turma</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var aluno in Model)
+            {
+                <tr>
+                    <td>@aluno.Nome</td>
+                    <td>@aluno.Idade</td>
+                    <td>@aluno.Turma</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
