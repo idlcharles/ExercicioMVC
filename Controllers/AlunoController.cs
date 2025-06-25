@@ -6,16 +6,19 @@ namespace ExercicioMVC.Controllers
     public class AlunoController : Controller
     {
         private readonly ILogger<AlunoController> _logger;
-        private static List<Aluno> alunos = new List<Aluno>();
+        //private static List<Aluno> alunos = new List<Aluno>();
+        private readonly IAlunoServico _alunoServico;
         private static int proximoId = 1;
 
-        public AlunoController(ILogger<AlunoController> logger)
+        public AlunoController(ILogger<AlunoController> logger, IAlunoServico alunoServico)
         {
             _logger = logger;
+            _alunoServico = alunoServico;
         }
 
         public IActionResult Index()
         {
+            var alunos = _alunoServico.ListarAlunos();
             return View(alunos); // alunos deve ser uma lista estática ou vinda de banco
         }
 
@@ -35,7 +38,8 @@ namespace ExercicioMVC.Controllers
             if (ModelState.IsValid)
             {
                 aluno.Id = proximoId++;
-                alunos.Add(aluno);
+                _alunoServico.CriarAluno(aluno.Nome, aluno.Idade, aluno.Turma);
+               // alunos.Add(aluno);  utilisando a lista da memória
                 return RedirectToAction(nameof(Index));
             }
             return View(aluno);
@@ -43,7 +47,9 @@ namespace ExercicioMVC.Controllers
 
         public IActionResult Edit(int id)
         {
-            var aluno = alunos.FirstOrDefault(a => a.Id == id);
+            //var aluno = alunos.FirstOrDefault(a => a.Id == id);
+            var alunos = _alunoServico.ListarAlunos(); // Se você tiver um método para buscar por ID  
+            var aluno = alunos.FirstOrDefault(a => a.Id == id); 
             return aluno == null ? NotFound() : View(aluno);
         }
 
@@ -51,6 +57,8 @@ namespace ExercicioMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Aluno aluno)
         {
+            var alunos = _alunoServico.ListarAlunos(); // Se você tiver um método para buscar por ID  
+            //var aluno = alunos.FirstOrDefault(a => a.Id == id);
             var existente = alunos.FirstOrDefault(a => a.Id == id);
             if (existente == null) return NotFound();
 
@@ -59,6 +67,7 @@ namespace ExercicioMVC.Controllers
                 existente.Nome = aluno.Nome;
                 existente.Idade = aluno.Idade;
                 existente.Turma = aluno.Turma;
+                _alunoServico.AtualizarAluno(id, aluno.Nome, aluno.Idade, aluno.Turma);
                 return RedirectToAction(nameof(Index));
             }
             return View(aluno);
@@ -66,12 +75,14 @@ namespace ExercicioMVC.Controllers
 
         public IActionResult Details(int id)
         {
+            var alunos = _alunoServico.ListarAlunos(); // Se você tiver um método para buscar por ID  
             var aluno = alunos.FirstOrDefault(a => a.Id == id);
             return aluno == null ? NotFound() : View(aluno);
         }
 
         public IActionResult Delete(int id)
         {
+            var alunos = _alunoServico.ListarAlunos(); // Se você tiver um método para buscar por ID  
             var aluno = alunos.FirstOrDefault(a => a.Id == id);
             return aluno == null ? NotFound() : View(aluno);
         }
@@ -80,9 +91,11 @@ namespace ExercicioMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
+            var alunos = _alunoServico.ListarAlunos(); // Se você tiver um método para buscar por ID  
             var aluno = alunos.FirstOrDefault(a => a.Id == id);
-            if (aluno != null)
-                alunos.Remove(aluno);
+            _alunoServico.RemoverAluno(id);
+            //if (aluno != null)
+            //    alunos.Remove(aluno);
 
             return RedirectToAction(nameof(Index));
         }

@@ -1,7 +1,13 @@
+using ExercicioMVC.Repositorio;
+using ExercicioMVC.Servicos;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IAlunoServico, AlunoServico>();
+builder.Services.AddScoped<IAlunoRepositorio, AlunoRepositorio>();
 
 var app = builder.Build();
 
